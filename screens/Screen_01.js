@@ -69,7 +69,7 @@ export default function Screen_01() {
                         <View style={styles.container2}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Image source={require('../assets/baiTH4/personicon.png')} style={styles.icon} />
-                                <View style={{ marginLeft: 5 }}>
+                                <View style={{ marginLeft: 10 }}>
                                     <Text style={styles.welcomeText}>Welcome!</Text>
                                     <Text style={styles.donnaText}>Donna stroupe</Text>
                                 </View>
@@ -142,6 +142,7 @@ export default function Screen_01() {
                             numColumns={2}
                             scrollEnabled={false}
                             columnWrapperStyle={styles.locationRow}
+                            style={{ marginBottom: 70 }}
                         />
                     </View>
                 </ScrollView>
@@ -225,7 +226,8 @@ const styles = StyleSheet.create({
     },
     donnaText: {
         color: '#fff',
-        fontSize: 15,
+        marginTop: 5,
+        fontSize: 20,
     },
     notificationIcon: {
         width: 50,
@@ -262,26 +264,10 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     categoryText: {
-        fontSize: 12,
+        fontSize: 17,
         textAlign: 'center',
         color: '#333333',
     },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-
-    menuIcon: {
-        width: 35,
-        height: 35,
-    },
-
-    locationContainer: {
-        marginTop: 10,
-        gap: 10,
-    },
-
     locationRow: {
         justifyContent: 'space-between',
         marginBottom: 10,
@@ -328,11 +314,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     footerIcon: {
-        width: 25,
-        height: 25,
+        width: 35,
+        height: 35,
     },
     footerText: {
         color: '#fff',
-        fontSize: 12,
+        fontSize: 17,
     },
 })
