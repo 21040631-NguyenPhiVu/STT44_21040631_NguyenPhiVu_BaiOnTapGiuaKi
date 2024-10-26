@@ -53,7 +53,7 @@ export default function Screen_01() {
     );
 
     return (
-        <SafeAreaView style={styles.c}>
+        <SafeAreaView style={styles.SafeAreaView}>
             <View style={styles.container}>
                 <ScrollView style={{ width: '100%', height: 650, }}>
                     <View style={styles.headerContainer}>
@@ -91,13 +91,13 @@ export default function Screen_01() {
                             <FlatList
                                 data={category}
                                 renderItem={renderCategoryItem}
-                                keyExtractor={(item, index) => index.toString()} // Sử dụng index nếu không có id
+                                keyExtractor={(item, index) => index.toString()}
                                 numColumns={4}
                                 scrollEnabled={false}
                                 columnWrapperStyle={styles.categoryRow}
                             />
                         ) : (
-                            <Text>No categories available</Text> // Hiển thị thông báo nếu không có dữ liệu
+                            <Text>No categories available</Text>
                         )}
                     </View>
 
@@ -112,13 +112,13 @@ export default function Screen_01() {
                             <FlatList
                                 data={location}
                                 renderItem={renderLocationItem}
-                                keyExtractor={(item, index) => index.toString()} // Sử dụng index nếu không có id
+                                keyExtractor={(item, index) => index.toString()}
                                 numColumns={3}
                                 scrollEnabled={false}
                                 columnWrapperStyle={styles.locationRow}
                             />
                         ) : (
-                            <Text>No categories available</Text> // Hiển thị thông báo nếu không có dữ liệu
+                            <Text>No categories available</Text>
                         )}
                     </View>
 
@@ -288,25 +288,25 @@ const styles = StyleSheet.create({
     },
 
     locationItem: {
-        width: '31%',  // Slightly less than 1/3 to account for spacing
+        width: '31%',
         borderRadius: 12,
         overflow: 'hidden',
         backgroundColor: '#f0f0f0',
-        marginBottom: 10, // Thêm khoảng cách dưới mỗi mục
+        marginBottom: 10,
         marginTop: 10,
     },
 
     locationImage: {
-        width: '100%', // Đảm bảo hình ảnh chiếm toàn bộ chiều rộng
-        height: 100, // Đặt chiều cao cụ thể cho hình ảnh
+        width: '100%',
+        height: 100,
         borderRadius: 12,
     },
     recommendedItem: {
-        width: '47%',  // Slightly less than 1/3 to account for spacing
+        width: '47%',
         borderRadius: 12,
         overflow: 'hidden',
         backgroundColor: '#f0f0f0',
-        marginBottom: 10, // Thêm khoảng cách dưới mỗi mục
+        marginBottom: 10,
         marginTop: 10,
     },
     recommendedLocations: {
@@ -315,9 +315,9 @@ const styles = StyleSheet.create({
         borderRadius: 12,
     },
     footerContainer: {
-        position: 'absolute', // Thêm dòng này
-        bottom: 0,            // Thêm dòng này
-        width: '100%',        // Chiều rộng 100% màn hình
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
         flexDirection: 'row',
         backgroundColor: '#5958b2',
         paddingVertical: 10,
