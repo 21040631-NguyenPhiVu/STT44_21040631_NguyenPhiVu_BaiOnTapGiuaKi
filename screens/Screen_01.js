@@ -315,19 +315,14 @@ const styles = StyleSheet.create({
         borderRadius: 12,
     },
     footerContainer: {
+        position: 'absolute', // Thêm dòng này
+        bottom: 0,            // Thêm dòng này
+        width: '100%',        // Chiều rộng 100% màn hình
         flexDirection: 'row',
         backgroundColor: '#5958b2',
         paddingVertical: 10,
         justifyContent: 'space-around',
         alignItems: 'center',
-        position: 'absolute', // Làm cho footer nổi lên
-        bottom: 0,            // Căn cuối màn hình
-        width: '100%',        // Chiếm hết chiều ngang màn hình
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,         // Độ nổi trên Android
     },
     footerItem: {
         alignItems: 'center',
