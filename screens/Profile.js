@@ -273,9 +273,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 25,
     },
-    gmail: {
-        fontSize: 16,
-    },
     btnEdit: {
         marginTop: 10,
         backgroundColor: '#3592e7',
