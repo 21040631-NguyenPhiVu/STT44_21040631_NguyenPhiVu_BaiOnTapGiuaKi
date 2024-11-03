@@ -1,18 +1,9 @@
 const express = require('express');
 const mysql = require('mysql2');
-const multer = require('multer');
-const path = require('path');
 const app = express();
 const cors = require('cors');
 const PORT = 4000;
-const fs = require('fs');
-const uploadDir = './uploads';
 
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cors());
@@ -28,16 +19,6 @@ db.connect((err) => {
     console.log('Connected!');
 })
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
 
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
@@ -61,11 +42,9 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-app.post('/register', upload.single('avatar'), (req, res) => {
+app.post('/register', (req, res) => {
     const { username, password } = req.body;
-    const avatar = req.file ? req.file.path : 'default_avatar_path';
-    console.log('Register attempt:', { username, password, avatar });
-    console.log(req.file);
+    console.log('Register attempt:', { username, password });
 
     const checkUserNameExist = 'SELECT * FROM user WHERE username = ?';
     db.query(checkUserNameExist, [username], (err, result) => {
@@ -76,8 +55,8 @@ app.post('/register', upload.single('avatar'), (req, res) => {
             return res.status(400).send({ message: 'Username already exists' });
         }
 
-        const insertUser = 'INSERT INTO user (username, password, avatar) VALUES (?, ?, ?)';
-        db.query(insertUser, [username, password, avatar], (err) => {
+        const insertUser = 'INSERT INTO user (username, password) VALUES (?, ?)';
+        db.query(insertUser, [username, password], (err) => {
             if (err) {
                 console.error('Error inserting user:', err);
                 return res.status(500).send({ message: 'Internal server error' });

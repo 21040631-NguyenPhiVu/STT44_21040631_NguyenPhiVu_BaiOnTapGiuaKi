@@ -59,7 +59,7 @@ export default function Screen_01() {
                 setModalVisible(true);
             }
         } catch (error) {
-            setModalMessage('Network error. Please try again.');
+            setModalMessage(error.message);
             setModalVisible(true);
         }
     };

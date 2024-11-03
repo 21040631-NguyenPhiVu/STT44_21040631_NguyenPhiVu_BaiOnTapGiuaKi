@@ -12,7 +12,6 @@ export default function Screen_02() {
     const [category, setCategory] = useState([]);
     const [location, setLocation] = useState([]);
     const [username, setUsername] = useState('');
-    const [avatar, setAvatar] = useState(null);
 
     const recommendedLocations = [
         {
@@ -33,9 +32,6 @@ export default function Screen_02() {
                 if (storageUsername) {
                     setUsername(storageUsername);
                 }
-                if (storageAvatar) {
-                    setAvatar(storageAvatar);
-                }
             };
             getUserInfo();
         }, [])
@@ -44,12 +40,8 @@ export default function Screen_02() {
     useEffect(() => {
         const getUserInfo = async () => {
             const storedUsername = await AsyncStorage.getItem('username');
-            const storedAvatar = await AsyncStorage.getItem('avatar');
             if (storedUsername) {
                 setUsername(storedUsername);
-            }
-            if (storedAvatar) {
-                setAvatar(storedAvatar);
             }
         };
         getUserInfo();
@@ -103,11 +95,7 @@ export default function Screen_02() {
                         </View>
                         <View style={styles.container2}>
                             <View style={{ flexDirection: 'row' }}>
-                                {avatar ? (
-                                    <Image source={{ uri: avatar }} style={styles.icon} />
-                                ) : (
-                                    <Image source={require('../assets/baiTH4/personicon.png')} style={styles.icon} />
-                                )}
+                                <Image source={require('../assets/baiTH4/personicon.png')} style={styles.icon} />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text style={styles.welcomeText}>Welcome!</Text>
                                     <Text style={styles.donnaText}>{username}</Text>
@@ -201,7 +189,7 @@ export default function Screen_02() {
                         <Text style={styles.footerText}>Search</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.footerItem}
-                        onPress={() => navigation.navigate('Profile', { username, avatar })}
+                        onPress={() => navigation.navigate('Profile', { username })}
                     >
                         <Image source={require('../assets/baiTH4/profileicon.png')} style={styles.footerIcon} />
                         <Text style={styles.footerText}>Profile</Text>

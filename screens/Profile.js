@@ -17,7 +17,6 @@ export default function Profile() {
     const navigation = useNavigation();
     const route = useRoute();
     const [username, setUsername] = useState('');
-    const [avatar, setAvatar] = useState(null);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
     const [showLogoutButton, setShowLogoutButton] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -28,12 +27,8 @@ export default function Profile() {
     useEffect(() => {
         const getUserInfo = async () => {
             const storedUsername = await AsyncStorage.getItem('username');
-            const storedAvatar = await AsyncStorage.getItem('avatar');
             if (storedUsername) {
                 setUsername(storedUsername);
-            }
-            if (storedAvatar) {
-                setAvatar(storedAvatar);
             }
         };
         getUserInfo();
@@ -66,7 +61,6 @@ export default function Profile() {
             setModalVisible(true);
             if (response.status === 200) {
                 await AsyncStorage.removeItem('username');
-                await AsyncStorage.removeItem('avatar');
             }
         } catch (error) {
             setModalMessage('Network error. Please try again.');
@@ -77,13 +71,11 @@ export default function Profile() {
 
     const handleLogout = async () => {
         await AsyncStorage.removeItem('username');
-        await AsyncStorage.removeItem('avatar');
         navigation.navigate('LoginScreen');
     };
 
     const confirmLogoutAction = async () => {
         await AsyncStorage.removeItem('username');
-        await AsyncStorage.removeItem('avatar');
         navigation.navigate('LoginScreen');
     };
 
@@ -103,11 +95,7 @@ export default function Profile() {
             />
             <ScrollView style={styles.scrollView} onScroll={handleScroll} scrollEventThrottle={16}>
                 <View style={styles.headerProfile}>
-                    {avatar ? (
-                        <Image source={{ uri: avatar }} style={styles.avatarIcon} />
-                    ) : (
-                        <Image source={require('../assets/baiTH4/boy.png')} style={styles.avatarIcon} />
-                    )}
+                    <Image source={require('../assets/baiTH4/personicon.png')} style={styles.avatarIcon} />
                     <View style={styles.headerRight}>
                         <Text style={styles.userName}>{username}</Text>
                         <TouchableOpacity style={styles.btnEdit}
