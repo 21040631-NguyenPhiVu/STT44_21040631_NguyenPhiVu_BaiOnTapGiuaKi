@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    StyleSheet,
-    TextInput,
-    Modal,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Screen_01() {
@@ -160,7 +152,7 @@ const styles = StyleSheet.create({
     helloText: {
         color: 'black',
         fontWeight: 'bold',
-        fontSize: 28, // Đã điều chỉnh kích thước chữ
+        fontSize: 28,
         textAlign: 'center',
         marginBottom: 70,
     },
@@ -212,20 +204,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalText: {
-        fontSize: 20, // Đã điều chỉnh kích thước chữ thông báo
+        fontSize: 20,
         marginBottom: 20,
         color: 'black',
     },
     modalBtnOK: {
         backgroundColor: '#00bdd6',
-        width: '50%', // Giảm kích thước chiều rộng của nút
-        padding: 10, // Giảm padding
+        width: '50%',
+        padding: 10,
         borderRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
     },
     modalBtnText: {
-        color: '#fff', // Đặt màu chữ là trắng
-        fontSize: 16, // Đặt kích thước chữ cho nút
+        color: '#fff',
+        fontSize: 16,
     },
 });

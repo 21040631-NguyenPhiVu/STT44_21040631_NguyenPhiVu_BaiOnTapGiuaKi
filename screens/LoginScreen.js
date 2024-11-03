@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    StyleSheet,
-    TextInput,
-    Modal,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -35,7 +27,6 @@ export default function Screen_01() {
             const data = await response.json();
             if (response.status === 200) {
                 await AsyncStorage.setItem('username', username);
-                await AsyncStorage.setItem('avatar', data.avatar);
                 setModalMessage(data.message);
                 setModalVisible(true);
                 setTimeout(() => { navigation.navigate('Screen_02'); }, 2000);

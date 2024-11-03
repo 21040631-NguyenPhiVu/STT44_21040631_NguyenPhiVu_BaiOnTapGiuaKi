@@ -28,7 +28,6 @@ export default function Screen_02() {
         useCallback(() => {
             const getUserInfo = async () => {
                 const storageUsername = await AsyncStorage.getItem('username');
-                const storageAvatar = await AsyncStorage.getItem('avatar');
                 if (storageUsername) {
                     setUsername(storageUsername);
                 }
@@ -54,7 +53,8 @@ export default function Screen_02() {
         axios.get('http://localhost:4000/getLocation')
             .then((res) => {
                 setLocation(res.data);
-            });
+            })
+            .catch(error => console.error('Error fetching localtion', error));
     }, []);
 
     const renderCategoryItem = ({ item }) => (

@@ -1,45 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    StyleSheet,
-    TextInput,
-    Modal,
-    Platform
-} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal } from 'react-native';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Screen_01() {
     const navigation = useNavigation();
     const [showPassword, setShowPassword] = useState(false);
     const [showRePassword, setShowRePassword] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [rePassword, setRePassword] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
-    const handleImagePicker = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setSelectedImage(result.assets[0].uri);
-        }
-    };
-
     const handleRegister = async () => {
-        if (!username || !password || !selectedImage) {
+        if (!username || !password) {
             setModalMessage('Please fill all fields and select an image');
             setModalVisible(true);
             return;
@@ -48,11 +23,6 @@ export default function Screen_01() {
         const formData = new FormData();
         formData.append('username', username);
         formData.append('password', password);
-        formData.append('image', {
-            uri: selectedImage.uri,
-            name: selectedImage.name,
-            type: selectedImage.type,
-        });
 
         try {
             const response = await axios.post('http://localhost:4000/register', formData, {
@@ -123,13 +93,6 @@ export default function Screen_01() {
                         />
                     </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity style={styles.uploadButton} onPress={handleImagePicker}>
-                    <Image source={require('../assets/baiTH4/photo-camera.png')} style={styles.iconCamera} />
-                </TouchableOpacity>
-                {selectedImage && (
-                    <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
-                )}
 
                 <TouchableOpacity style={styles.btnCreateAccount} onPress={handleRegister}>
                     <Text style={styles.textCreateAccount}>Register</Text>
