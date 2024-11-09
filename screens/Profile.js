@@ -203,7 +203,7 @@ export default function Profile() {
                                 <Text style={styles.confirmTextCancel}>No</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.btnConfirm}
-                                onPress={confirmLogoutAction} // Confirm logout
+                                onPress={confirmLogoutAction}
                             >
                                 <Text style={styles.confirmTextDelete}>Yes</Text>
                             </TouchableOpacity>
@@ -324,11 +324,14 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     btnDelete: {
+        position: 'absolute',
         marginHorizontal: 20,
         backgroundColor: 'red',
         padding: 15,
         alignItems: 'center',
         borderRadius: 12,
+        bottom: 80,
+        width: '90%',
     },
     recommendPostContainer: {
         marginHorizontal: 20,
@@ -420,12 +423,15 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     btnLogout: {
+        position: 'absolute',
         marginHorizontal: 20,
         backgroundColor: 'blue',
         padding: 15,
         alignItems: 'center',
         borderRadius: 12,
         marginTop: 10,
+        bottom: 10,
+        width: '90%',
     },
     logoutText: {
         fontSize: 23,

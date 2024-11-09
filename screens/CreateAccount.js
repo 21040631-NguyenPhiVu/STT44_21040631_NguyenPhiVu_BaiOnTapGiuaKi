@@ -15,23 +15,28 @@ export default function Screen_01() {
 
     const handleRegister = async () => {
         if (!username || !password) {
-            setModalMessage('Please fill all fields and select an image');
+            setModalMessage('Please fill all fields!');
             setModalVisible(true);
             return;
         }
 
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('password', password);
+        if (password !== rePassword) {
+            setModalMessage('Password and Re-Password do not match!');
+            setModalVisible(true);
+            return;
+        }
 
         try {
-            const response = await axios.post('http://localhost:4000/register', formData, {
+            const response = await fetch('http://localhost:4000/register', {
+                method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ username, password }),
             });
+            const data = await response.json();
             if (response.status === 200) {
-                setModalMessage(response.data.message);
+                setModalMessage(data.message);
                 setModalVisible(true);
                 setTimeout(() => { navigation.navigate('LoginScreen'); }, 2000);
             }
