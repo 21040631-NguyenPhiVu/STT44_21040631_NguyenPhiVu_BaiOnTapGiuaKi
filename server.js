@@ -1,151 +1,139 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 const PORT = 4000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'userdb'
+
+const uri = "mongodb://localhost:27017/userdb";
+mongoose.connect(uri)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Could not connect to MongoDB', err));
+
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
 });
 
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Connected!');
-})
+const categorySchema = new mongoose.Schema({
+    name: String,
+    image: String,
+});
 
+const locationSchema = new mongoose.Schema({
+    image: String
+});
 
-app.post('/api/login', (req, res) => {
+const User = mongoose.model('User', userSchema);
+const Category = mongoose.model('Category', categorySchema, 'Category');
+const Location = mongoose.model('Location', locationSchema, 'Location');
+
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     console.log('Login attempt:', { username, password });
-    const query = 'SELECT * FROM user WHERE username = ? AND password = ?';
 
-    db.query(query, [username, password], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-        if (result.length > 0) {
-            const user = result[0];
+    try {
+        const user = await User.findOne({ username, password });
+        if (user) {
             return res.status(200).json({
                 message: 'Login successful',
                 username: user.username,
-                avatar: user.avatar
             });
         } else {
             return res.status(401).json({ message: 'Invalid Username or Password' });
         }
-    });
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     console.log('Register attempt:', { username, password });
 
-    const checkUserNameExist = 'SELECT * FROM user WHERE username = ?';
-    db.query(checkUserNameExist, [username], (err, result) => {
-        if (err) {
-            return res.status(500).send({ message: 'Internal server error' });
-        }
-        if (result.length > 0) {
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
             return res.status(400).send({ message: 'Username already exists' });
         }
 
-        const insertUser = 'INSERT INTO user (username, password) VALUES (?, ?)';
-        db.query(insertUser, [username, password], (err) => {
-            if (err) {
-                console.error('Error inserting user:', err);
-                return res.status(500).send({ message: 'Internal server error' });
-            }
-            res.status(200).send({ message: 'User registered successfully' });
-        });
-    });
+        const newUser = new User({ username, password });
+        await newUser.save();
+        res.status(200).send({ message: 'User registered successfully' });
+    } catch (err) {
+        console.error('Error inserting user:', err);
+        return res.status(500).send({ message: 'Internal server error' });
+    }
 });
 
-app.post('/delete', (req, res) => {
+app.post('/delete', async (req, res) => {
     const { username } = req.body;
-    const deleteUser = 'DELETE FROM user WHERE username = ?';
-    db.query(deleteUser, [username], (err, result) => {
-        if (err) {
-            res.status(500).send({ message: 'Internal server error' });
-        }
-        if (result.affectedRows > 0) {
+
+    try {
+        const result = await User.deleteOne({ username });
+        if (result.deletedCount > 0) {
             return res.status(200).send({ message: 'User deleted successfully' });
         } else {
             return res.status(400).send({ message: 'User not found' });
         }
-    });
+    } catch (err) {
+        return res.status(500).send({ message: 'Internal server error' });
+    }
 });
 
-app.post('/update', (req, res) => {
+app.post('/update', async (req, res) => {
     const { username, password } = req.body;
-    const checkUserNameExist = 'SELECT * FROM user WHERE username = ?';
-    db.query(checkUserNameExist, [username], (err, result) => {
-        if (err) {
-            return res.status(500).send({ message: 'Internal server error' });
-        }
-        if (result.length === 0) {
+
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
             return res.status(400).send({ message: 'Username does not exist' });
         }
 
-        const updateUser = 'UPDATE user SET password = ? WHERE username = ?';
-        db.query(updateUser, [password, username], (err, result) => {
-            if (err) {
-                return res.status(500).send({ message: 'Internal server error' });
-            }
-            if (result.affectedRows > 0) {
-                return res.status(200).send({ message: 'Password updated successfully' });
-            } else {
-                return res.status(400).send({ message: 'Password update failed' });
-            }
-        });
-    });
+        user.password = password;
+        await user.save();
+        return res.status(200).send({ message: 'Password updated successfully' });
+    } catch (err) {
+        return res.status(500).send({ message: 'Internal server error' });
+    }
 });
 
-
-app.post('/updateUser', (req, res) => {
+app.post('/updateUser', async (req, res) => {
     const { oldUsername, username, password } = req.body;
 
-    const updateUser = 'UPDATE user SET username = ?, password = ? WHERE username = ?';
-    db.query(updateUser, [username, password, oldUsername], (err, result) => {
-        if (err) {
-            return res.status(500).send({ message: 'Internal server error' });
-        }
-        if (result.affectedRows > 0) {
+    try {
+        const result = await User.updateOne({ username: oldUsername }, { username, password });
+        if (result.matchedCount > 0) {
             return res.status(200).send({ message: 'Updated successfully' });
         } else {
             return res.status(400).send({ message: 'Update failed' });
         }
-    });
-
+    } catch (err) {
+        return res.status(500).send({ message: 'Internal server error' });
+    }
 });
 
-app.get('/getCategory', (req, res) => {
-    const query = 'SELECT * FROM category';
-    db.query(query, (err, result) => {
-        if (err) {
-            res.status(500).send({ message: 'Internal server error' });
-        }
-        res.status(200).send(result);
-    });
-})
+app.get('/getCategory', async (req, res) => {
+    try {
+        const categories = await Category.find();
+        res.status(200).send(categories);
+    } catch (err) {
+        res.status(500).send({ message: 'Internal server error' });
+    }
+});
 
-app.get('/getLocation', (req, res) => {
-    const query = 'SELECT * FROM location';
-    db.query(query, (err, result) => {
-        if (err) {
-            res.status(500).send({ message: 'Internal server error' });
-        }
-        res.status(200).send(result);
-    });
-})
-
-app
+app.get('/getLocation', async (req, res) => {
+    try {
+        const locations = await Location.find();
+        res.status(200).send(locations);
+    } catch (err) {
+        res.status(500).send({ message: 'Internal server error' });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-})
+});
